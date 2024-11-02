@@ -16,8 +16,8 @@ public class NotaRouter {
     @Bean
     public RouterFunction<ServerResponse> notaRoutes(NotaController notaController){
         return RouterFunctions
-                .route(GET("/notas/{studentId}"), notaController::getNotasFromEstudiante)
-                .andRoute(POST("/notas/{studentId}"), notaController::createNotaForEstudiante)
+                .route(GET("/notas/{courseId}/{studentId}"), notaController::getNotasFromEstudiante)
+                .andRoute(POST("/notas/{courseId}/{studentId}"), notaController::createNotaForEstudiante)
                 .andRoute(DELETE("/notas/{id}"), notaController::deleteNota)
                 .andRoute(PATCH("/notas/{id}"), notaController::updateNota);
     }

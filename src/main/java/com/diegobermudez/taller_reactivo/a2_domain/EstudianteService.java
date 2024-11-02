@@ -1,7 +1,6 @@
 package com.diegobermudez.taller_reactivo.a2_domain;
 
 
-import com.diegobermudez.taller_reactivo.a2_domain.models.EstudianteModel;
 import com.diegobermudez.taller_reactivo.a1_presentation.dtos.EstudianteDTO;
 import com.diegobermudez.taller_reactivo.a3_repository.EstudianteRepository;
 import com.diegobermudez.taller_reactivo.a3_repository.NotaRepository;

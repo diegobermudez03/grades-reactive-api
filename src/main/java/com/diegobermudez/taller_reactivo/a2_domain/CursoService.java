@@ -54,7 +54,7 @@ public class CursoService {
     }
 
 
-    private Mono<CursoModel> entitiyToModel(CursoEntity entity){
+    public Mono<CursoModel> entitiyToModel(CursoEntity entity){
         return profesorRepository.findById(entity.getProfesorId())
                 .zipWith(materiaRepository.findById(entity.getMateriaId()))
                 .map(tuple -> {
