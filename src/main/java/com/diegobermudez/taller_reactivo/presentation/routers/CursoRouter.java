@@ -14,7 +14,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 public class CursoRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> cursoRouter(CursoController cursoController) {
+    public RouterFunction<ServerResponse> cursoRoutes(CursoController cursoController) {
         return RouterFunctions
                 .route(POST("/cursos"),cursoController::createCurso)
                 .andRoute(GET("/cursos/all"), cursoController::getAllCursos)

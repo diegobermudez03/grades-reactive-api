@@ -14,7 +14,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 public class EstudianteRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> estudianteRouter(EstudianteController estudianteController){
+    public RouterFunction<ServerResponse> estudianteRoutes(EstudianteController estudianteController){
         return RouterFunctions
                 .route(GET("/estudiantes/byCurso/{id}"), estudianteController::getEstudiantesByCurso)
                 .andRoute(GET("/estudiantes/all"), estudianteController::getAllEstudiantes)

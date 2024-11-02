@@ -14,10 +14,10 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 public class NotaRouter {
 
     @Bean
-    public RouterFunction<ServerResponse> notasCurso(NotaController notaController){
+    public RouterFunction<ServerResponse> notaRoutes(NotaController notaController){
         return RouterFunctions
                 .route(GET("/notas/{studentId}"), notaController::getNotasFromEstudiante)
-                .andRoute(POST("/notas/{studentId}"), notaController::createNotaForStudent)
+                .andRoute(POST("/notas/{studentId}"), notaController::createNotaForEstudiante)
                 .andRoute(DELETE("/notas/{id}"), notaController::deleteNota)
                 .andRoute(PATCH("/notas/{id}"), notaController::updateNota);
     }
