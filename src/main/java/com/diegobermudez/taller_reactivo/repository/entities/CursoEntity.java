@@ -18,26 +18,20 @@ import java.time.LocalDate;
 @Table("curso")
 public class CursoEntity {
     @Id
-    @Embedded.Nullable
-    private CursoKey id;
+    private Integer id;
+
+    @Column("materia_id")
+    private Integer materiaId;
+
+    @Column("profesor_id")
+    private Integer profesorId;
+
+    private String codigo;
 
     @Column("fecha_inicio")
     private LocalDate fechaInicio;
 
     @Column("fecha_fin")
     private LocalDate fechaFin;
-
-
-    @Getter
-    @Setter
-    public class CursoKey implements Serializable{
-        @Column("materia_id")
-        private Integer materiaId;
-
-        @Column("profesor_id")
-        private Integer profesorId;
-
-        private String codigo;
-    }
 
 }

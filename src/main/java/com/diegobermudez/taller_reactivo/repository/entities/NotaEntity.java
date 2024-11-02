@@ -16,14 +16,8 @@ public class NotaEntity {
     @Id
     private Integer id;
 
-    @Column("materia_id")
-    private Integer materiaId;
-
-    @Column("profesor_id")
-    private Integer profesorId;
-
-    @Column("curso_codigo")
-    private  String cursoCodigo;
+    @Column("curso_id")
+    private Integer cursoId;
 
     @Column("estudiante_id")
     private Integer estudianteId;
