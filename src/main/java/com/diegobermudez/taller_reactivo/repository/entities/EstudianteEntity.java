@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Setter
 @Builder
 @Table("estudiante")
-public class Estudiante {
+public class EstudianteEntity {
 
     @Id
     private Integer id;

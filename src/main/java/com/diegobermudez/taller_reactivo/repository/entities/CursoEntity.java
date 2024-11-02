@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Setter
 @Builder
 @Table("curso")
-public class Curso {
+public class CursoEntity {
     @Id
     @Embedded.Nullable
     private CursoKey id;
@@ -30,7 +30,7 @@ public class Curso {
 
     @Getter
     @Setter
-    private class CursoKey implements Serializable{
+    public class CursoKey implements Serializable{
         @Column("materia_id")
         private Integer materiaId;
 

@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Setter
 @Builder
 @Table("nota")
-public class Nota {
+public class NotaEntity {
 
     @Id
     private Integer id;
