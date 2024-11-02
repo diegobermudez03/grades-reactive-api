@@ -1,4 +1,4 @@
-package com.diegobermudez.taller_reactivo.repository.entities;
+package com.diegobermudez.taller_reactivo.a3_repository.entities;
 
 
 import lombok.Builder;

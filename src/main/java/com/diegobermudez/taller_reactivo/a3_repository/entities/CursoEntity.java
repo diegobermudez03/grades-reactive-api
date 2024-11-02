@@ -1,4 +1,4 @@
-package com.diegobermudez.taller_reactivo.repository.entities;
+package com.diegobermudez.taller_reactivo.a3_repository.entities;
 
 
 import lombok.Builder;
@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter

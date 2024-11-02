@@ -1,7 +1,7 @@
-package com.diegobermudez.taller_reactivo.presentation.routers;
+package com.diegobermudez.taller_reactivo.a1_presentation.routers;
 
 
-import com.diegobermudez.taller_reactivo.presentation.controllers.NotaController;
+import com.diegobermudez.taller_reactivo.a1_presentation.controllers.NotaController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;

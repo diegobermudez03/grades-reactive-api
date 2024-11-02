@@ -1,7 +1,6 @@
-package com.diegobermudez.taller_reactivo.presentation.controllers;
+package com.diegobermudez.taller_reactivo.a1_presentation.controllers;
 
-import com.diegobermudez.taller_reactivo.presentation.dtos.EstudianteDTO;
-import com.diegobermudez.taller_reactivo.presentation.dtos.NotaDTO;
+import com.diegobermudez.taller_reactivo.a1_presentation.dtos.NotaDTO;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;

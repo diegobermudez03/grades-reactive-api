@@ -1,14 +1,14 @@
-package com.diegobermudez.taller_reactivo.presentation.controllers;
+package com.diegobermudez.taller_reactivo.a1_presentation.controllers;
 
-import com.diegobermudez.taller_reactivo.domain.EstudianteService;
-import com.diegobermudez.taller_reactivo.presentation.dtos.EstudianteDTO;
+import com.diegobermudez.taller_reactivo.a2_domain.EstudianteService;
+import com.diegobermudez.taller_reactivo.a1_presentation.dtos.EstudianteDTO;
+import com.diegobermudez.taller_reactivo.a3_repository.entities.EstudianteEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 
@@ -20,19 +20,11 @@ public class EstudianteController {
 
     public Mono<ServerResponse> getEstudiantesByCurso(ServerRequest request){
         final Integer cursoId = Integer.valueOf(request.pathVariable("id"));
-        return ok().body(service.getStudentsByCourse(cursoId)
-                        .map(model ->
-                                new EstudianteDTO(model.getId(), model.getNombre(), model.getApellido(), model.getCorreo())
-                        )
-                , EstudianteDTO.class);
+        return ok().body(service.getStudentsByCourse(cursoId), EstudianteEntity.class);
     }
 
     public Mono<ServerResponse> getAllEstudiantes(ServerRequest request) {
-        return ok().body(service.getAllEstudiantes()
-                                .map(model ->
-                                        new EstudianteDTO(model.getId(), model.getNombre(), model.getApellido(), model.getCorreo())
-                                )
-                        , EstudianteDTO.class);
+        return ok().body(service.getAllEstudiantes(), EstudianteEntity.class);
     }
 
     public Mono<ServerResponse> updateEstudiante(ServerRequest request){
