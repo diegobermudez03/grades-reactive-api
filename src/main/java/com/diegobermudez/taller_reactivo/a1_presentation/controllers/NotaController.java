@@ -27,6 +27,13 @@ public class NotaController {
                 .onErrorResume(e -> ServerResponse.badRequest().bodyValue("Cuerpo invalido"));
     }
 
+    public Mono<ServerResponse> getNotaPonderada(ServerRequest request){
+        final Integer cursoId = Integer.valueOf(request.pathVariable("courseId"));
+        final Integer estudianteId = Integer.valueOf(request.pathVariable("studentId"));
+        return service.calculateCurrentGrade(cursoId, estudianteId).flatMap(model->ServerResponse.ok().bodyValue(model))
+                .onErrorResume(e -> ServerResponse.badRequest().bodyValue("Cuerpo invalido"));
+    }
+
     public Mono<ServerResponse> getNotasFromEstudiante(ServerRequest request){
         final Integer cursoId = Integer.valueOf(request.pathVariable("courseId"));
         final Integer estudianteId = Integer.valueOf(request.pathVariable("studentId"));

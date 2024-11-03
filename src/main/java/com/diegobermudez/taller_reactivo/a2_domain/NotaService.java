@@ -70,7 +70,7 @@ public class NotaService {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("No se encontro la nota")));
     }
 
-    private Mono<TotalNotaModel> calculateCurrentGrade(Integer cursoId, Integer estudianteId){
+    public Mono<TotalNotaModel> calculateCurrentGrade(Integer cursoId, Integer estudianteId){
          final var acumulate = notaRepository.findAll()
                  .filter(nota->nota.getCursoId() == cursoId)
                  .filter(nota->nota.getEstudianteId() == estudianteId)

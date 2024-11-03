@@ -17,6 +17,7 @@ public class NotaRouter {
     public RouterFunction<ServerResponse> notaRoutes(NotaController notaController){
         return RouterFunctions
                 .route(GET("/notas/{courseId}/{studentId}"), notaController::getNotasFromEstudiante)
+                .andRoute(GET("/notas/ponderado/{courseId}/{studentId}"), notaController::getNotaPonderada)
                 .andRoute(POST("/notas/{courseId}/{studentId}"), notaController::createNotaForEstudiante)
                 .andRoute(DELETE("/notas/{id}"), notaController::deleteNota)
                 .andRoute(PATCH("/notas/{id}"), notaController::updateNota);
