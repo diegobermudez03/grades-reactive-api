@@ -20,11 +20,14 @@ public class NotaController {
         final Integer cursoId = Integer.valueOf(request.pathVariable("courseId"));
         final Integer estudianteId = Integer.valueOf(request.pathVariable("studentId"));
         final Mono<NotaDTO> notaDTO = request.bodyToMono(NotaDTO.class);
-        return notaDTO.flatMap(nota->
-                        service.createNotaForStudentInCourse(nota, estudianteId, cursoId)
-                                .flatMap(model->ServerResponse.ok().bodyValue(model))
+        return notaDTO.flatMap(nota-> {
+                            return service.createNotaForStudentInCourse(nota, estudianteId, cursoId)
+                                    .flatMap(model -> ServerResponse.ok().bodyValue(model));
+                        }
                 )
-                .onErrorResume(e -> ServerResponse.badRequest().bodyValue("Cuerpo invalido"));
+                .onErrorResume(e -> {
+                    return ServerResponse.badRequest().bodyValue(e.getMessage());
+                });
     }
 
     public Mono<ServerResponse> getNotaPonderada(ServerRequest request){
@@ -43,10 +46,10 @@ public class NotaController {
     public Mono<ServerResponse> updateNota(ServerRequest request){
         final Integer id = Integer.valueOf(request.pathVariable("id"));
         final Mono<NotaDTO> notaDTO = request.bodyToMono(NotaDTO.class);
-        return notaDTO.flatMap(nota->
-                        service.updateNota(nota, id)
-                                .flatMap(model->ServerResponse.ok().bodyValue(model))
-                )
+        return notaDTO.flatMap(nota-> {
+                    return service.updateNota(nota, id)
+                            .flatMap(model -> ServerResponse.ok().bodyValue(model));
+                })
                 .onErrorResume(e -> ServerResponse.badRequest().bodyValue("Cuerpo invalido"));
     }
 

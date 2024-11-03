@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+
 @AllArgsConstructor
 @Component
 public class NotaService {
@@ -24,19 +26,19 @@ public class NotaService {
 
     public Flux<NotaModel> getNotasOfStudentInCourse(Integer estudianteId, Integer cursoId){
         return notaRepository.findAll()
-                .filter(nota-> nota.getCursoId() == cursoId)
-                .filter(nota-> nota.getEstudianteId() == estudianteId)
+                .filter(nota-> Objects.equals(nota.getCursoId(), cursoId))
+                .filter(nota-> Objects.equals(nota.getEstudianteId(), estudianteId))
                 .flatMap(ent-> entityToModel(ent, false, false));
     }
 
     public Mono<TotalNotaModel> createNotaForStudentInCourse(NotaDTO notaDTO, Integer estudianteId, Integer cursoId){
         return notaRepository.findAll()
-                .filter(curso-> curso.getCursoId() == cursoId)
-                .filter(estudiante -> estudiante.getEstudianteId() == estudianteId)
+                .filter(curso-> Objects.equals(curso.getCursoId(), cursoId))
+                .filter(estudiante -> Objects.equals(estudiante.getEstudianteId(), estudianteId))
                 .map(NotaEntity::getPorcentaje)
-                .reduce(0d, (prev, curr)-> prev+curr)
+                .reduce(0d, Double::sum)
                 .flatMap(resultado->{
-                    if(resultado+notaDTO.valor() > 100 && notaDTO.valor() < 5){
+                    if(resultado+notaDTO.porcentaje() <= 100 && notaDTO.valor() <= 5){
                         return notaRepository.save(NotaEntity.builder()
                                 .observacion(notaDTO.observacion())
                                 .estudianteId(estudianteId)
@@ -51,15 +53,23 @@ public class NotaService {
                 });
     }
 
-    public Mono<TotalNotaModel> updateNota(NotaDTO notaDTO, Integer notaId){
-        return notaRepository.save(NotaEntity.builder()
-                .valor(notaDTO.valor())
-                .cursoId(notaDTO.cursoId())
-                .estudianteId(notaDTO.estudianteId())
-                .porcentaje(notaDTO.porcentaje())
-                .id(notaId)
-                .build()).flatMap(n-> calculateCurrentGrade(notaDTO.cursoId(), notaDTO.estudianteId()));
+    public Mono<TotalNotaModel> updateNota(NotaDTO notaDTO, Integer notaId) {
+        return notaRepository.findById(notaId)
+                .flatMap((nota) ->
+                   notaRepository.save(NotaEntity.builder()
+                            .cursoId(nota.getCursoId())
+                            .estudianteId(nota.getEstudianteId())
+                            .valor(notaDTO.valor())
+                             .observacion(notaDTO.observacion())
+                            .porcentaje(notaDTO.porcentaje())
+                            .id(notaId)
+                            .build()).flatMap(n -> calculateCurrentGrade(notaDTO.cursoId(), notaDTO.estudianteId()))
+                ).onErrorResume((e) -> {
+                    System.out.println(e.getMessage());
+                    return Mono.error(new IllegalArgumentException("El porcentaje o valor son invalidos"));
+                });
     }
+
 
     public Mono<TotalNotaModel> deleteNota(Integer notaId) {
         return notaRepository.findById(notaId)
@@ -70,33 +80,36 @@ public class NotaService {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("No se encontro la nota")));
     }
 
-    public Mono<TotalNotaModel> calculateCurrentGrade(Integer cursoId, Integer estudianteId){
-         final var acumulate = notaRepository.findAll()
-                 .filter(nota->nota.getCursoId() == cursoId)
-                 .filter(nota->nota.getEstudianteId() == estudianteId)
-                 .map(nota-> nota.getPorcentaje()*nota.getValor()/100)
-                 .reduce(0d, (prev, curr)->prev+curr);
+    public Mono<TotalNotaModel> calculateCurrentGrade(Integer cursoId, Integer estudianteId) {
+        Mono<Double> acumulate = notaRepository.findAll()
+                .filter(nota -> nota.getCursoId().equals(cursoId))
+                .filter(nota -> nota.getEstudianteId().equals(estudianteId))
+                .map(nota -> nota.getPorcentaje() * nota.getValor() / 100)
+                .reduce(0d, Double::sum);
 
-         final var porcentaje = notaRepository.findAll()
-                .filter(nota->nota.getCursoId() == cursoId)
-                .filter(nota->nota.getEstudianteId() == estudianteId)
+        Mono<Double> porcentaje = notaRepository.findAll()
+                .filter(nota -> nota.getCursoId().equals(cursoId))
+                .filter(nota -> nota.getEstudianteId().equals(estudianteId))
                 .map(NotaEntity::getPorcentaje)
-                .reduce(0d, (prev, curr)-> prev + curr);
+                .reduce(0d, Double::sum);
 
-         return acumulate.zipWith(porcentaje)
-                 .map(tuple->{
-                     final var acum = tuple.getT1();
-                     final var porc = tuple.getT2();
-                     return TotalNotaModel.builder()
-                             .porcentaje(porc)
-                             .valor((acum*100)/porc)
-                             .build();
-                 });
+        return acumulate.zipWith(porcentaje)
+                .map(tuple -> {
+                    final double acum = tuple.getT1();
+                    final double porc = tuple.getT2();
+                    double valor = porc == 0 ? 0 : (acum * 100) / porc;
+
+                    return TotalNotaModel.builder()
+                            .porcentaje(porc)
+                            .valor(valor)
+                            .build();
+                });
     }
+
 
     public Mono<NotaModel> entityToModel(NotaEntity entity, Boolean mostrarCurso, Boolean mostrarEstudiante) {
         return cursoRepository.findById(entity.getCursoId())
-                .flatMap(curso->cursoService.entitiyToModel(curso))
+                .flatMap(cursoService::entitiyToModel)
                 .zipWith(estudianteRepository.findById(entity.getEstudianteId()))
                 .map(tuple->{
                     final var curso = mostrarCurso ? tuple.getT1() : null;
